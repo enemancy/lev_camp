@@ -10,8 +10,10 @@
         <h1 class="title">{{ $post->title }}</h1>
         <div class="content">
             <div class="content__post">
-                <h3>本文</h3>
+                <h3>内容</h3>
                 <p>{{ $post->body }}</p>
+                <h4>カテゴリー</h4>
+                <a href="/categories/{{ $post->category->id }}">{{ $post->category->name }}</a>
             </div>
         </div>
         <div class="edit">

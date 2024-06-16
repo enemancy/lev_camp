@@ -32,6 +32,16 @@
             
             <p>ログインユーザー：{{ Auth::user()->name }}</p>
             
+            <div>
+                @foreach($questions as $question)
+                    <div>
+                        <a href="https://teratail.com/questions/{{ $question['id'] }}">
+                            {{ $question['title'] }}
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+            
             <script>
                 function deletePost(id) {
                     if(confirm('削除すると復元できません。\n本当に削除しますか。')) {

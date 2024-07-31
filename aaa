@@ -1,0 +1,38 @@
+Sub ConvertExternalReferencesToValues()
+    Dim cell As Range
+    Dim formulasRange As Range
+    Dim wsName As String
+    Dim precCell As Range
+    Dim isExternal As Boolean
+    
+    ' アクティブシートの名前を取得
+    wsName = ActiveSheet.Name
+    
+    ' アクティブシートのセル範囲内で数式が含まれるセルを選択
+    On Error Resume Next
+    Set formulasRange = ActiveSheet.UsedRange.SpecialCells(xlCellTypeFormulas)
+    On Error GoTo 0
+    
+    ' 数式が含まれるセルがある場合のみ処理
+    If Not formulasRange Is Nothing Then
+        For Each cell In formulasRange
+            isExternal = False
+            
+            ' Direct Precedentsを取得して、別のシートやブックを参照しているか確認
+            On Error Resume Next
+            For Each precCell In cell.DirectPrecedents
+                ' 他のシートまたはブックを参照しているか確認
+                If precCell.Parent.Name <> wsName Or precCell.Parent.Parent.Name <> ThisWorkbook.Name Then
+                    isExternal = True
+                    Exit For
+                End If
+            Next precCell
+            On Error GoTo 0
+            
+            ' 外部参照が見つかった場合、値に置き換える
+            If isExternal Then
+                cell.Value = cell.Value
+            End If
+        Next cell
+    End If
+End Sub
